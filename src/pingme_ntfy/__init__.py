@@ -1,8 +1,8 @@
 # SPDX-License-Identifier: EUPL-1.2
-"""pingme: send a push notification to your phone with a single call.
+"""pingme-ntfy: send a push notification to your phone with a single call.
 
 Usage:
-    from pingme import ping
+    from pingme_ntfy import ping
     ping("Training finished")
 
 Configuration is read from environment variables:
@@ -18,14 +18,18 @@ import json
 import logging
 import os
 import urllib.request
+from importlib import metadata
 
 __all__ = ["ping"]
-__version__ = "0.1.0"
+try:
+    __version__ = metadata.version("pingme-ntfy")
+except Exception:
+    __version__ = "unknown"
 
 DEFAULT_SERVER = "https://ntfy.sh"
 TIMEOUT_SECONDS = 10
 
-log = logging.getLogger("pingme")
+log = logging.getLogger("pingme_ntfy")
 
 
 def ping(message, title=None, priority=None, tags=None):
@@ -43,7 +47,7 @@ def ping(message, title=None, priority=None, tags=None):
     try:
         topic = os.environ.get("NTFY_TOPIC", "").strip()
         if not topic:
-            log.warning("pingme: NTFY_TOPIC is not set, message not sent")
+            log.warning("pingme-ntfy: NTFY_TOPIC is not set, message not sent")
             return False
 
         server = os.environ.get("NTFY_SERVER", "").strip() or DEFAULT_SERVER
@@ -71,13 +75,13 @@ def ping(message, title=None, priority=None, tags=None):
             return 200 <= response.status < 300
 
     except Exception as exc:
-        log.warning("pingme: could not send message: %s", exc)
+        log.warning("pingme-ntfy: could not send message: %s", exc)
         return False
 
 
 def main():
-    """Command line entry point: pingme "your message"."""
+    """Command line entry point: pingme-ntfy "your message"."""
     import sys
 
-    text = " ".join(sys.argv[1:]) or "Hello from pingme"
+    text = " ".join(sys.argv[1:]) or "Hello from pingme-ntfy"
     sys.exit(0 if ping(text) else 1)

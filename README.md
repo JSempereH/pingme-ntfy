@@ -1,9 +1,9 @@
-# pingme
+# pingme-ntfy
 
 Send a push notification to your phone from any Python script with one call:
 
 ```python
-from pingme import ping
+from pingme_ntfy import ping
 
 ping("Backup finished")
 ```
@@ -55,57 +55,44 @@ echo $NTFY_TOPIC
 
 Note: cron jobs do not read `~/.bashrc`. If you call `ping()` from cron, use `/etc/environment` or define the variable at the top of your crontab.
 
-### 5. Install uv
+### 5. Install the library
 
-The project is managed with [uv](https://docs.astral.sh/uv/). If you do not have it yet:
-
-```bash
-curl -LsSf https://astral.sh/uv/install.sh | sh
-```
-
-### 6. Get the library
-
-Clone it somewhere on your machine:
+With [uv](https://docs.astral.sh/uv/), inside the project where you want to use it:
 
 ```bash
-git clone https://github.com/JSempereH/pingme.git ~/pingme
+uv add pingme-ntfy
 ```
 
-Then add it to the uv project where you want to use it:
+Or with pip:
 
 ```bash
-cd my-project
-uv add --editable ~/pingme
+pip install pingme-ntfy
 ```
 
-`--editable` means changes in `~/pingme` are picked up without reinstalling. Drop it if you prefer a fixed copy. You can also install straight from the repository with `uv add git+https://github.com/JSempereH/pingme`.
-
-To get the `pingme` command available everywhere in your shell:
+To get the `pingme-ntfy` command available everywhere in your shell:
 
 ```bash
-uv tool install ~/pingme
+uv tool install pingme-ntfy
 ```
 
-### 7. Test it
-
-From the `~/pingme` folder:
+### 6. Test it
 
 ```bash
-uv run pingme "Hello from my computer"
+uvx pingme-ntfy "Hello from my computer"
 ```
 
-Or, if you installed it with `uv tool install`, just `pingme "Hello from my computer"`.
+`uvx` runs the command without installing anything permanently. If you installed it with `uv tool install`, just run `pingme-ntfy "Hello from my computer"`.
 
 You should get a notification on your phone within a few seconds. The command exits with code `0` on success and `1` on failure, so it also works in shell scripts:
 
 ```bash
-./backup.sh && pingme "Backup OK" || pingme "Backup FAILED"
+./backup.sh && pingme-ntfy "Backup OK" || pingme-ntfy "Backup FAILED"
 ```
 
 ## Usage
 
 ```python
-from pingme import ping
+from pingme_ntfy import ping
 
 ping("Job done")
 
@@ -123,7 +110,7 @@ if not ping("Something"):
 A common pattern is to notify when a long task ends, even if it fails:
 
 ```python
-from pingme import ping
+from pingme_ntfy import ping
 
 try:
     run_long_task()
@@ -145,22 +132,22 @@ All configuration comes from environment variables:
 
 ## Errors and logging
 
-Failures are reported through the standard `logging` module under the `pingme` logger. By default Python prints them to stderr. To silence them:
+Failures are reported through the standard `logging` module under the `pingme_ntfy` logger. By default Python prints them to stderr. To silence them:
 
 ```python
 import logging
-logging.getLogger("pingme").setLevel(logging.ERROR)
+logging.getLogger("pingme_ntfy").setLevel(logging.ERROR)
 ```
 
 ## Project layout
 
 ```
-pingme/
-├── LICENSE              EUPL-1.2 full text
+pingme-ntfy/
+├── LICENSE                EUPL-1.2 full text
 ├── README.md
-├── pyproject.toml       package metadata, built with uv_build
-└── src/pingme/
-    └── __init__.py      all the logic
+├── pyproject.toml         package metadata, built with uv_build
+└── src/pingme_ntfy/
+    └── __init__.py        all the logic
 ```
 
 Build a wheel and source distribution with `uv build`.
