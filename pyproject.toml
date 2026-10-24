@@ -1,0 +1,16 @@
+[project]
+name = "pingme"
+version = "0.1.0"
+description = "Send a push notification to your phone with a single ping() call, using ntfy."
+readme = "README.md"
+license = "EUPL-1.2"
+license-files = ["LICENSE"]
+requires-python = ">=3.9"
+dependencies = []
+
+[project.scripts]
+pingme = "pingme:main"
+
+[build-system]
+requires = ["uv_build>=0.9,<0.14"]
+build-backend = "uv_build"
